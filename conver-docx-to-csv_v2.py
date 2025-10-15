@@ -1,7 +1,7 @@
 # conver-docx-to-csv.py
 # Uso:
-#   CSV:  python conver-docx-to-csv.py "C:/ruta/archivo.docx" --csv "C:/ruta/salida.csv"
-#   JSON: python conver-docx-to-csv.py "C:/ruta/archivo.docx" --json "C:/ruta/salida.json"
+#   CSV:  python conver-docx-to-csv_v2.py "C:/Users/G3019113/Downloads/ssssssssssss.docx" --csv "C:/Users/G3019113/Downloads/ssssssssssss.csv"
+#   JSON: python conver-docx-to-csv_v2.py "C:/Users/cleverit/Downloads/ssssssssssss.docx" --json "C:/Users/cleverit/Downloads/ssssssssssss.json"
 
 
 # Esta versión extrae "id, tipo método, URL endpoint, Código EH, fecha ejecución, y cantidad vulnerabilidades (críticas, altas, medias y bajas)" en CSV y JSON
@@ -107,7 +107,10 @@ def extract_endpoints(doc: Document) -> List[Tuple[str,str,str]]:
             if len(r.cells) < 2: continue
             key = _norm(r.cells[0].text)
             if key in LABELS:
-                data[LABELS[key]] = _clean(r.cells[1].text)
+                val = _clean(r.cells[1].text)
+                if LABELS[key] == "uri":
+                    val = val.replace(" ", "")  # 🔥 limpia espacios en URLs
+                data[LABELS[key]] = val
         if data["num"] and data["metodo"] and data["uri"]:
             metodo = data["metodo"].split()[0].upper()
             if metodo in HTTP_METHODS:
